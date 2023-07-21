@@ -24,7 +24,7 @@ const id = route.params.id
 const router = useRouter()
 
 function getRecord() {
-  axios.post(getPath, {token: user.token, id: Number(id), offset: arr.value.length, step: step.value})
+  axios.post(getPath, {token: user.token, id: Number(id), offset: arr.value.length*step.value, step: step.value})
     .then((res) => {
       const answer = res.data
       if (!answer.is_ok) {
