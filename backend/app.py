@@ -9,7 +9,6 @@ from status import error, success
 from re import fullmatch
 from utils import EMAIL_CHECKER_REGEX, get_metadata
 from random import randrange
-from time import time
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -154,7 +153,7 @@ def drop_record():
         record = session.query(Record) \
             .join(User) \
             .filter(User.token == token, Record.user_id == User.id, Record.id == _id) \
-            .scalar()[0]
+            .scalar()
         
         if not record:
             return error(error="record isnt exists")
@@ -191,6 +190,8 @@ def set_record():
     if (_id := data.get("id")) in (None, ''):
         return error(error="expected id")
     
+    print("ID DATA", _id)
+
     if not (action := data.get("action")):
         return error(error="expected action")
     
@@ -217,9 +218,12 @@ def set_record():
                 return error(error="expected index")
 
             data = session.query(Data) \
+                .filter(Data.record_id == _id) \
                 .offset(index) \
                 .limit(1) \
                 .scalar()
+            
+            print(data, index)
             
             session.delete(data)
         elif action == "set":
@@ -230,6 +234,7 @@ def set_record():
                 return error(error="expected value")
         
             data = session.query(Data) \
+                .filter(Data.record_id == _id) \
                 .offset(index) \
                 .limit(1) \
                 .scalar()

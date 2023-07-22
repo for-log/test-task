@@ -48,4 +48,4 @@ class Data(Base):
     record: Mapped[Record] = relationship(back_populates="datas")
 
     def __repr__(self):
-        return f'<Record {self.id}>'
+        return f'<Data {self.id=} {self.value=} {self.record_id=}>'
